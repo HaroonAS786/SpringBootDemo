@@ -33,8 +33,10 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+//    @OneToMany(mappedBy = "user")
     @Builder.Default
+    @ToString.Exclude
     private List<Address> addresses = new ArrayList<>();
 
     public void addAddress(Address address) {
@@ -50,7 +52,20 @@ public class User {
     @ManyToMany
     @JoinTable(name = "user_tags", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @Builder.Default
+    @ToString.Exclude
     private Set<Tag> tags = new HashSet<>();
+
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.REMOVE})
+    private Profile profile;
+
+    @ManyToMany
+    @JoinTable(
+            name = "wishlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    @ToString.Exclude
+    private Set<Product> products = new HashSet<>();
 
     public void addTag(String tagName) {
         var tag = new Tag(tagName);
@@ -70,5 +85,34 @@ public class User {
             tags.remove(tagToRemove);
             tagToRemove.getUsers().remove(this);
         }
+    }
+
+    public void updateTag(String tagName) {
+        Tag tagToUpdate = null;
+        for (Tag tag : tags) {
+            if (tag.getName().equals(tagName)) {
+                tagToUpdate = tag;
+                break;
+            }
+        }
+        if (tagToUpdate != null) {
+            tags.remove(tagToUpdate);
+            tags.add(tagToUpdate);
+            tagToUpdate.getUsers().remove(this);
+        }
+    }
+
+    public void addProducts(Product product) {
+        products.add(product);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

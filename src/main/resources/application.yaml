@@ -7,13 +7,14 @@ spring:
     password: Leasts@4321
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
+    show_sql: true
+#    database-platform: org.hibernate.dialect.MySQL8Dialect
+#    hibernate:
+#      ddl-auto: validate
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
 stripe:
   apiUrl: https://stripe.come
   timeout: 1000

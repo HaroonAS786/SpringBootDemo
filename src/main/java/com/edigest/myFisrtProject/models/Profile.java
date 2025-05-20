@@ -1,13 +1,16 @@
 package com.edigest.myFisrtProject.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@ToString
 @Entity
 @Table(name = "Profiles")
 public class Profile {
@@ -23,4 +26,10 @@ public class Profile {
     private LocalDate dateOfBirth;
     @Column(name = "loyalty_points")
     private Integer loyaltyPoints;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    @MapsId
+    @ToString.Exclude
+    private User user;
 }
